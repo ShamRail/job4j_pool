@@ -12,7 +12,7 @@ public final class JSONUtils {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private JSONUtils() {}
+    private JSONUtils() { }
 
     public static String serialize(Object object) {
         String json = "";

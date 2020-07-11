@@ -11,7 +11,7 @@ public class TopicMessageService implements MessageService<TopicMessage> {
 
     private final Map<String, Queue<TopicMessage>> broker = new ConcurrentHashMap<>();
 
-    private TopicMessageService() {}
+    private TopicMessageService() { }
 
     private final static class Holder {
         private final static TopicMessageService INSTANCE = new TopicMessageService();

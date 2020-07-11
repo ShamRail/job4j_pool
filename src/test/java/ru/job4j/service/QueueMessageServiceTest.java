@@ -13,7 +13,7 @@ public class QueueMessageServiceTest {
         QueueMessageService qms = QueueMessageService.getInstance();
         QueueMessage message = new QueueMessage("a", "b");
         qms.put(message);
-        Assert.assertEquals(message, qms.get(""));
+        Assert.assertEquals(message, qms.get(message.getQueue()));
     }
 
     @Test

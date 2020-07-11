@@ -17,7 +17,7 @@ public class HttpRequest {
 
     private String uri = "";
 
-    private HttpRequest() {}
+    private HttpRequest() { }
 
     private void setContent(String content) {
         this.content = content;

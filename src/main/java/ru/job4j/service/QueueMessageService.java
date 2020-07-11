@@ -11,7 +11,7 @@ public class QueueMessageService implements MessageService<QueueMessage> {
 
     private final Map<String, Queue<QueueMessage>> broker = new ConcurrentHashMap<>();
 
-    private QueueMessageService() {}
+    private QueueMessageService() { }
 
     public static QueueMessageService getInstance() {
         return Holder.INSTANCE;
