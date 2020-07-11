@@ -10,7 +10,7 @@ public class QueueMessageServiceTest {
 
     @Test
     public void putAndGet() {
-        QueueMessageService qms = new QueueMessageService();
+        QueueMessageService qms = QueueMessageService.getInstance();
         QueueMessage message = new QueueMessage("a", "b");
         qms.put(message);
         Assert.assertEquals(message, qms.get(""));
@@ -18,7 +18,7 @@ public class QueueMessageServiceTest {
 
     @Test
     public void whenGetEmpty() {
-        QueueMessageService qms = new QueueMessageService();
+        QueueMessageService qms = QueueMessageService.getInstance();
         QueueMessage message = new QueueMessage();
         Assert.assertEquals(message, qms.get(""));
     }

@@ -13,13 +13,19 @@ public class JSONUtilsTest {
     public void whenSerializeTopicMessage() {
         TopicMessage message = new TopicMessage("topic", "text");
         String result = JSONUtils.serialize(message);
-        String expect = "{\"topic\":\"topic\",\"text\":\"text\"}";
+        String expect = "{" + System.lineSeparator() +
+                "  \"topic\" : \"topic\"," + System.lineSeparator() +
+                "  \"text\" : \"text\"" + System.lineSeparator() +
+                "}";
         Assert.assertEquals(expect, result);
     }
 
     @Test
     public void whenDeserializeTopicMessage() {
-        String input = "{\"topic\":\"topic\",\"text\":\"text\"}";
+        String input = "{" + System.lineSeparator() +
+                "  \"topic\" : \"topic\"," + System.lineSeparator() +
+                "  \"text\" : \"text\"" + System.lineSeparator() +
+                "}";
         Optional<TopicMessage> result = JSONUtils.deserialize(input, TopicMessage.class);
         TopicMessage expect = new TopicMessage("topic", "text");
         Assert.assertEquals(expect, result.get());
@@ -29,13 +35,19 @@ public class JSONUtilsTest {
     public void whenSerializeQueueMessage() {
         QueueMessage message = new QueueMessage("topic", "text");
         String result = JSONUtils.serialize(message);
-        String expect = "{\"queue\":\"topic\",\"text\":\"text\"}";
+        String expect = "{" + System.lineSeparator() +
+                "  \"queue\" : \"topic\"," + System.lineSeparator() +
+                "  \"text\" : \"text\"" + System.lineSeparator() +
+                "}";
         Assert.assertEquals(expect, result);
     }
 
     @Test
     public void whenDeserializeQueueMessage() {
-        String input = "{\"queue\":\"topic\",\"text\":\"text\"}";
+        String input = "{\n" +
+                "  \"queue\" : \"topic\",\n" +
+                "  \"text\" : \"text\"\n" +
+                "}";
         Optional<QueueMessage> result = JSONUtils.deserialize(input, QueueMessage.class);
         QueueMessage expect = new QueueMessage("topic", "text");
         Assert.assertEquals(expect, result.get());

@@ -8,7 +8,7 @@ public class TopicMessageServiceTest {
 
     @Test
     public void whenAddAndGet() {
-        TopicMessageService tms = new TopicMessageService();
+        TopicMessageService tms = TopicMessageService.getInstance();
         TopicMessage message = new TopicMessage("a", "b");
         tms.put(message);
         Assert.assertEquals(message, tms.get("a"));
@@ -16,7 +16,7 @@ public class TopicMessageServiceTest {
 
     @Test
     public void whenGetDefault() {
-        TopicMessageService tms = new TopicMessageService();
+        TopicMessageService tms = TopicMessageService.getInstance();
         TopicMessage message = new TopicMessage();
         Assert.assertEquals(message, tms.get(""));
     }

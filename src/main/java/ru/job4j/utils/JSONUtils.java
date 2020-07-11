@@ -1,9 +1,8 @@
 package ru.job4j.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ public final class JSONUtils {
     public static String serialize(Object object) {
         String json = "";
         try {
-            json = MAPPER.writeValueAsString(object);
+            json = MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (Exception e) {
             LOG.debug("Failed to serialize: {}, {}", object, e.getCause());
         }

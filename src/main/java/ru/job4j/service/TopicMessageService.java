@@ -9,28 +9,42 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TopicMessageService implements MessageService<TopicMessage> {
 
-    private final Map<String, Queue<TopicMessage>> topics = new ConcurrentHashMap<>();
+    private final Map<String, Queue<TopicMessage>> broker = new ConcurrentHashMap<>();
 
-    @Override
-    public void put(TopicMessage message) {
-        topics.putIfAbsent(message.getTopic(), new ConcurrentLinkedQueue<>());
-        topics.computeIfPresent(message.getTopic(), (s, topicMessages) -> {
-            topicMessages.offer(message);
-            return topicMessages;
-        });
+    private TopicMessageService() {}
+
+    private final static class Holder {
+        private final static TopicMessageService INSTANCE = new TopicMessageService();
+    }
+
+    public static TopicMessageService getInstance() {
+        return Holder.INSTANCE;
     }
 
     @Override
-    public TopicMessage get(String... topic) {
+    public void put(TopicMessage message) {
+        Queue<TopicMessage> queue = broker.getOrDefault(message.getTopic(), new ConcurrentLinkedQueue<>());
+        if (queue.isEmpty()) {
+            queue.offer(message);
+            broker.put(message.getTopic(), queue);
+        }
+    }
+
+    @Override
+    public TopicMessage get(String topic) {
         TopicMessage message = new TopicMessage();
-        if (topic.length == 0) {
-            return message;
+        for (String queueName : broker.keySet()) {
+            if (topic.equals(queueName)) {
+                Queue<TopicMessage> queueMessages = broker.get(queueName);
+                if (!queueMessages.isEmpty()) {
+                    TopicMessage head = queueMessages.poll();
+                    if (head != null) {
+                        message = head;
+                        break;
+                    }
+                }
+            }
         }
-        Queue<TopicMessage> queue = topics.get(topic[0]);
-        if (queue == null || queue.isEmpty()) {
-            return message;
-        }
-        message = queue.poll();
         return message;
     }
 

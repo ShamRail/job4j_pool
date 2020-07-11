@@ -2,22 +2,43 @@ package ru.job4j.service;
 
 import ru.job4j.model.QueueMessage;
 
+import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class QueueMessageService implements MessageService<QueueMessage> {
 
-    private final Queue<QueueMessage> queue = new ConcurrentLinkedQueue<>();
+    private final Map<String, Queue<QueueMessage>> broker = new ConcurrentHashMap<>();
 
-    @Override
-    public void put(QueueMessage message) {
-        queue.offer(message);
+    private QueueMessageService() {}
+
+    public static QueueMessageService getInstance() {
+        return Holder.INSTANCE;
+    }
+
+    private final static class Holder {
+        private final static QueueMessageService INSTANCE = new QueueMessageService();
     }
 
     @Override
-    public QueueMessage get(String... location) {
-        QueueMessage message = queue.poll();
-        return message != null ? message : new QueueMessage();
+    public void put(QueueMessage message) {
+        Queue<QueueMessage> queue = broker.getOrDefault(message.getQueue(), new ConcurrentLinkedQueue<>());
+        if (queue.isEmpty()) {
+            queue.offer(message);
+            broker.put(message.getQueue(), queue);
+        }
+    }
+
+    @Override
+    public QueueMessage get(String topic) {
+        QueueMessage message = new QueueMessage();
+        Queue<QueueMessage> queue = broker.get(topic);
+        if (queue == null || queue.isEmpty()) {
+            return message;
+        }
+        message = queue.poll();
+        return message;
     }
 
 }
